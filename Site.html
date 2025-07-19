@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head> <!--Simple Starting Tamplate-->
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap" rel="stylesheet"/>
+        <script src="https://kit.fontawesome.com/ccbd4d6bc1.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="styles.css"/>
+        <title>Best Portfolio Ever</title>      
+    </head>
+    <body>
+        <!--screen-->
+        <div class="screen">
+             
+            <!--Video Backround File (Me Coding)-->
+            <video autoplay loop muted id="VideoBackround">
+                <source src="Videos/Video.mp4" type="video/mp4">
+            </video>
+            
+            <!--Audio Of Button Click (Gunshot)-->
+            <audio id="ButtonGunShot">
+                <source src="Sounds/ButtonsGunShot.mp3" type="audio/mp3"/> 
+            </audio>
+            
+            <!--Audio Of Button Hover (Retro)-->
+            <audio id="ButtonHover">
+                <source src="Sounds/ButtonsHover.mp3" type="audio/mp3"/> 
+            </audio>
+
+            <!--Audio Of Nature (Ambience)-->
+             <audio cintrols autoplay>
+                <source src="Sounds/Ambience.mp3"/> 
+            </audio>
+
+
+            <!--GameMenu-->
+            <div class="GameMenu">
+                <h1>BEST PORTFOLIO EVER</h1>
+                <h3>By BarUrakbaev </h3>
+                <ul>
+                    <li><a href="#">Play</a></li>
+                    <li><a href="#">Explore</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Hire</a></li>
+                </ul>
+            </div>
+        </div>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'Roboto', sans-serif;
+                background-color: #000;
+            }
+            .screen {
+                position: relative;
+                width: 100%;
+                height: 100vh;
+                overflow: hidden;
+            }
+            #VideoBackround {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .GameMenu {
+                position: absolute;
+                top: 50%;
+                left: 20%;
+                transform: translate(-50%, -50%);
+                text-align: left;
+                color: white;
+            }
+            .GameMenu h1, .GameMenu h3 {
+                margin: 0.0em 0;
+            }
+            .GameMenu ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            .GameMenu ul li {
+                margin: 1em 0;
+            }
+            .GameMenu ul li a {
+                color: #C7C7C7;
+                text-decoration: none;
+            }
+            .GameMenu ul li a:hover {
+                color: #fff; /* Change color on hover */
+            }   
+            @media screen and (max-width: 800px) {
+                .GameMenu h1 {
+                    font-size: 2em;
+                }
+               .GameMenu h3 {
+                    font-size: 1.5em;
+                }
+            }
+            @media screen and (max-width: 500px) {
+                .GameMenu h1 {
+                    letter-spacing: 5px;
+                }
+                .GameMenu h3::before,
+                .GameMenu h3::after {
+                    display: none;
+                }
+            }
+            @media screen and (max-height: 450px) {
+                .screen,
+            video {
+                    height: 35em;
+                }
+            }    
+            
+        </style>
+        
+        <script>
+
+            //Elements
+            //const video = document.getElementById('VideoBackround');
+            //const audio = document.getElementById('Ambience')
+            //const links = document.querySelectorAll("ul a");
+            //const audioclick = document.getElementById("ButtonGunShot");
+            //const audiohover = document.getElementById("ButtonHover");
+        
+            //for (let i= 0; i <links.length; i++) {
+                //links[i].addEventListener("click", clickSound);
+                //links[i].addEventListener("hover", hoverSound);
+            //}
+
+            //function clickSound() {
+                //audioclick.play();
+            //}
+
+            //function hoverSound() {
+                //audiohover.play();
+            //}
+
+            //function soundplay(){
+                //sound.loop = true; 
+                //sound.play(); }
+    
+
+            //clickSound();
+            //hoverSound();
+            //sound.play();
+            
+        </script>
+    </body>
+</html>
