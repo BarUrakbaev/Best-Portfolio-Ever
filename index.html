@@ -136,11 +136,6 @@
             const audioclick = document.getElementById("ButtonGunShot");
             const audiohover = document.getElementById("ButtonHover");
         
-            for (let i= 0; i <links.length; i++) {
-                links[i].addEventListener("click", clickSound);
-                links[i].addEventListener("mouseenter", hoverSound);
-            };
-
             function hoverSound() {
                 audiohover.currentTime = 0;
                 // Play only if audio is loaded and allowed by browser
@@ -148,21 +143,6 @@
                     // Optionally log or handle play errors (e.g., user gesture required)
                     console.log("Hover sound play failed:", e);
                 });
-            }
-            
-            function clickSound(event) {
-                event.preventDefault();
-                audioclick.currentTime = 0;
-                audioclick.play();
-                // Disable GameMenu links while sound is playing
-                links.forEach(link => link.style.pointerEvents = "none");
-                audioclick.onended = function() {
-                    links.forEach(link => link.style.pointerEvents = "auto");
-                    // Optionally, follow the link after sound ends
-                    if (event.target && event.target.href && event.target.getAttribute('href') !== "#") {
-                        window.location = event.target.href;
-                    }
-                };
             }
             // Play ambience audio in loop
             audio.loop = true;
@@ -184,38 +164,6 @@
                 // Wait for user interaction if autoplay fails
                 document.addEventListener('keydown', tryPlayAmbience);
                 document.addEventListener('click', tryPlayAmbience);
-            });
-            
-            links.forEach(link => {
-                link.setAttribute('tabindex', '0');
-            });
-
-            // Disable mouse navigation for menu links
-            links.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                });
-            });
-
-            // Keyboard navigation
-            document.addEventListener('keydown', function(e) {
-                const focusable = Array.from(links);
-                const current = document.activeElement;
-                let idx = focusable.indexOf(current);
-
-                if (e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)) {
-                    e.preventDefault();
-                    idx = (idx + 1) % focusable.length;
-                    focusable[idx].focus();
-                    hoverSound(); // Play hover sound on keyboard navigation
-                } else if (e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) {
-                    e.preventDefault();
-                    idx = (idx - 1 + focusable.length) % focusable.length;
-                    focusable[idx].focus();
-                    hoverSound(); // Play hover sound on keyboard navigation
-                } else if (e.key === 'Enter' && focusable.includes(current)) {
-                    current.click();
-                }
             });
 
             // Hide mouse cursor and disable mouse input
@@ -243,7 +191,155 @@
             // Set initial focus to first link
             window.onload = function() {
                 links[0].focus();
-            };            
-        </script>       
+            };
+            /* --- Submenu Data --- */
+            const menuData = {
+                Play: {
+                    title: "PLAY MENU",
+                    subtitle: "Choose your adventure",
+                    items: [
+                        { label: "Start Game", href: "#" },
+                        { label: "Load Game", href: "#" },
+                        { label: "High Scores", href: "#" },
+                        { label: "Back", href: "main" }
+                    ]
+                },
+                Explore: {
+                    title: "EXPLORE MENU",
+                    subtitle: "Discover more",
+                    items: [
+                        { label: "Projects", href: "#" },
+                        { label: "Gallery", href: "#" },
+                        { label: "Back", href: "main" }
+                    ]
+                },
+                Contact: {
+                    title: "CONTACT MENU",
+                    subtitle: "Let's connect",
+                    items: [
+                        { label: "Email", href: "#" },
+                        { label: "LinkedIn", href: "#" },
+                        { label: "Back", href: "main" }
+                    ]
+                },
+                About: {
+                    title: "ABOUT MENU",
+                    subtitle: "Who am I?",
+                    items: [
+                        { label: "Bio", href: "#" },
+                        { label: "Skills", href: "#" },
+                        { label: "Back", href: "main" }
+                    ]
+                },
+                Hire: {
+                    title: "HIRE MENU",
+                    subtitle: "Work with me",
+                    items: [
+                        { label: "Freelance", href: "#" },
+                        { label: "Full-time", href: "#" },
+                        { label: "Back", href: "main" }
+                    ]
+                }
+            };
+
+            /* --- Menu Switch Logic --- */
+            const gameMenu = document.querySelector('.GameMenu');
+            let currentMenu = "main";
+            let submenuLinks = [];
+
+            function renderMenu(menuKey) {
+                let html = "";
+            if (menuKey === "main") {
+                html = `
+                    <h1>BEST PORTFOLIO EVER</h1>
+                    <h3>By BarUrakbaev </h3>
+                    <ul>
+                        <li><a href="#" data-menu="Play">Play</a></li>
+                        <li><a href="#" data-menu="Explore">Explore</a></li>
+                        <li><a href="#" data-menu="Contact">Contact</a></li>
+                        <li><a href="#" data-menu="About">About</a></li>
+                        <li><a href="#" data-menu="Hire">Hire</a></li>
+                    </ul>
+                `;
+            } else {
+                    const data = menuData[menuKey];
+                    html = `
+                        <h1>${data.title}</h1>
+                        <h3>${data.subtitle}</h3>
+                        <ul>
+                            ${data.items.map(item =>
+                                `<li><a href="#" data-menu="${item.href === "main" ? "main" : ""}">${item.label}</a></li>`
+                            ).join("")}
+                        </ul>
+                    `;
+                }
+                gameMenu.innerHTML = html;
+
+                // Remove default list styling and set li styles
+                const ul = gameMenu.querySelector('ul');
+                if (ul) {
+                    ul.style.listStyle = 'none';
+                    ul.style.padding = '0';
+                    ul.style.margin = '1.5em 0';
+                }
+                gameMenu.querySelectorAll('ul li').forEach(li => {
+                    li.style.display = 'block';
+                    li.style.margin = '0.7em 0';
+                });
+
+                // Set up new links
+                submenuLinks = Array.from(gameMenu.querySelectorAll('ul a'));
+                submenuLinks.forEach(link => {
+                    link.setAttribute('tabindex', '0');
+                    link.addEventListener("mouseenter", hoverSound);
+                    link.addEventListener("click", menuClickHandler);
+                });
+                // Set initial focus
+                setTimeout(() => submenuLinks[0]?.focus(), 0);
+            }
+
+            function menuClickHandler(e) {
+                e.preventDefault();
+                audioclick.currentTime = 0;
+                audioclick.play();
+                const menuAttr = e.target.getAttribute('data-menu');
+                // If on main menu and a submenu button is pressed, show submenu
+                if (currentMenu === "main" && menuAttr && menuData[menuAttr]) {
+                    currentMenu = menuAttr;
+                    renderMenu(currentMenu);
+                }
+                // If in submenu and "Back" is pressed, go back to main
+                else if (currentMenu !== "main" && menuAttr === "main") {
+                    currentMenu = "main";
+                    renderMenu(currentMenu);
+                }
+            }
+
+            // Initial render
+            renderMenu("main");
+
+            // Keyboard navigation for submenu
+            document.addEventListener('keydown', function(e) {
+                const focusable = submenuLinks;
+                const current = document.activeElement;
+                let idx = focusable.indexOf(current);
+
+                if (focusable.length === 0) return;
+
+                if (e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)) {
+                    e.preventDefault();
+                    idx = (idx + 1) % focusable.length;
+                    focusable[idx].focus();
+                    hoverSound();
+                } else if (e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) {
+                    e.preventDefault();
+                    idx = (idx - 1 + focusable.length) % focusable.length;
+                    focusable[idx].focus();
+                    hoverSound();
+                } else if (e.key === 'Enter' && focusable.includes(current)) {
+                    current.click();
+                }
+            });
+        </script>
     </body>
 </html>
