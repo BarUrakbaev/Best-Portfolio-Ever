@@ -16,22 +16,22 @@
              
             <!--Video Backround File (Me Coding)-->
             <video autoplay loop muted id="VideoBackround">
-                <source src="Videos/Video.mp4" type="video/mp4">
+                <source src="Video.mp4" type="video/mp4">
             </video>
             
             <!--Audio Of Button Click (Gunshot)-->
             <audio id="ButtonGunShot">
-                <source src="Sounds/ButtonsGunShot.mp3" type="audio/mp3"/> 
+                <source src="ButtonsGunShot.mp3" type="audio/mp3"/> 
             </audio>
             
             <!--Audio Of Button Hover (Retro)-->
             <audio id="ButtonHover">
-                <source src="Sounds/ButtonsHover.mp3" type="audio/mp3"/> 
+                <source src="ButtonsHover.mp3" type="audio/mp3"/> 
             </audio>
 
             <!--Audio Of Nature (Ambience)-->
              <audio cintrols autoplay>
-                <source src="Sounds/Ambience.mp3"/> 
+                <source src="Ambience.mp3" type="audio/mp3"/>
             </audio>
 
 
@@ -123,33 +123,33 @@
         <script>
 
             //Elements
-            //const video = document.getElementById('VideoBackround');
-            //const audio = document.getElementById('Ambience')
-            //const links = document.querySelectorAll("ul a");
-            //const audioclick = document.getElementById("ButtonGunShot");
-            //const audiohover = document.getElementById("ButtonHover");
+            const video = document.getElementById('VideoBackround');
+            const sound = document.getElementById('Ambience')
+            const links = document.querySelectorAll("ul a");
+            const audioclick = document.getElementById("ButtonGunShot");
+            const audiohover = document.getElementById("ButtonHover");
         
-            //for (let i= 0; i <links.length; i++) {
-                //links[i].addEventListener("click", clickSound);
-                //links[i].addEventListener("hover", hoverSound);
-            //}
+            for (let i= 0; i <links.length; i++) {
+                links[i].addEventListener("click", clickSound);
+                links[i].addEventListener("hover", hoverSound);
+            }
 
-            //function clickSound() {
-                //audioclick.play();
-            //}
+            function clickSound() {
+                audioclick.play();
+            }
 
-            //function hoverSound() {
-                //audiohover.play();
-            //}
+            function hoverSound() {
+                audiohover.play();
+            }
 
-            //function soundplay(){
-                //sound.loop = true; 
-                //sound.play(); }
+            function soundplay(){
+                sound.loop = true; 
+                sound.play(); }
     
 
-            //clickSound();
-            //hoverSound();
-            //sound.play();
+            clickSound();
+            hoverSound();
+            soundplay();
             
         </script>
     </body>
