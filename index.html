@@ -5,35 +5,38 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap" rel="stylesheet"/>
+        <!-- I'm using Press Start 2P gaming font from Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
         <script src="https://kit.fontawesome.com/ccbd4d6bc1.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="styles.css"/>
-        <title>Best Portfolio Ever</title>      
+        <title>BEST_PORTFOLIO_EVER</title>
+        <style>body {font-family: 'Press Start 2P', cursive, sans-serif !important;}</style>
     </head>
     <body>
         <!--screen-->
         <div class="screen">
-             
+            <div id = "videoContainer" 
+            style="width: 100%; max-width: 600px;">
             <!--Video Backround File (Me Coding)-->
             <video autoplay loop muted id="VideoBackround">
-                <source src="Video.mp4" type="video/mp4">
+                <source src="Videos/Video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
             </video>
+            </div>
             
             <!--Audio Of Button Click (Gunshot)-->
             <audio id="ButtonGunShot">
-                <source src="ButtonsGunShot.mp3" type="audio/mp3"/> 
+                <source src="Sounds/ButtonsGunShot.mp3"> 
             </audio>
             
             <!--Audio Of Button Hover (Retro)-->
             <audio id="ButtonHover">
-                <source src="ButtonsHover.mp3" type="audio/mp3"/> 
+                <source src="Sounds/ButtonHover.mp3"> 
             </audio>
 
-            <!--Audio Of Nature (Ambience)-->
-             <audio cintrols autoplay>
-                <source src="Ambience.mp3" type="audio/mp3"/>
+            <audio id = "Ambience">
+                <source src="Sounds/Ambience.mp3">
             </audio>
-
 
             <!--GameMenu-->
             <div class="GameMenu">
@@ -72,85 +75,175 @@
             .GameMenu {
                 position: absolute;
                 top: 50%;
-                left: 20%;
-                transform: translate(-50%, -50%);
+                left: 5vw;
+                transform: translateY(-50%);
                 text-align: left;
                 color: white;
+                max-width: 90vw;
+                width: 30vw;
+                min-width: 800px;
+                box-sizing: border-box;
             }
-            .GameMenu h1, .GameMenu h3 {
+            .GameMenu h1 {
                 margin: 0.0em 0;
+                font-size: 2.4vw;
+                line-height: 2.2;
+                word-break: break-word;
             }
-            .GameMenu ul {
-                list-style-type: none;
-                padding: 0;
+            .GameMenu h3 {
+                margin: 0.0em 0;
+                font-size: 1.5vw;
+                line-height: 1.2; 
+                word-break: break-word;
             }
-            .GameMenu ul li {
-                margin: 1em 0;
-            }
+
             .GameMenu ul li a {
                 color: #C7C7C7;
                 text-decoration: none;
+                font-size: 1.1vw;
+                padding: 0.3em 0.5em;
+                display: inline-block;
+                max-width: 100%;
+                box-sizing: border-box;
             }
             .GameMenu ul li a:hover {
                 color: #fff; /* Change color on hover */
-            }   
-            @media screen and (max-width: 800px) {
-                .GameMenu h1 {
-                    font-size: 2em;
-                }
-               .GameMenu h3 {
-                    font-size: 1.5em;
-                }
-            }
-            @media screen and (max-width: 500px) {
-                .GameMenu h1 {
-                    letter-spacing: 5px;
-                }
-                .GameMenu h3::before,
-                .GameMenu h3::after {
-                    display: none;
-                }
-            }
-            @media screen and (max-height: 450px) {
-                .screen,
+            }  
+
             video {
-                    height: 35em;
-                }
-            }    
+                max-width: 100%;
+                height: auto;
+            }
             
+            /* Glow effect only on keyboard focus, mouse is MIA sorry bro */
+            .GameMenu h1:focus-visible,
+            .GameMenu h3:focus-visible,
+            .GameMenu ul li a:focus-visible {
+            color: #fff;
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff;
+            transition: color 0.3s, text-shadow 0.3s;
+            outline: none;
+            }
+
         </style>
         
         <script>
 
             //Elements
             const video = document.getElementById('VideoBackround');
-            const sound = document.getElementById('Ambience')
+            const audio = document.getElementById('Ambience')
             const links = document.querySelectorAll("ul a");
             const audioclick = document.getElementById("ButtonGunShot");
             const audiohover = document.getElementById("ButtonHover");
         
             for (let i= 0; i <links.length; i++) {
                 links[i].addEventListener("click", clickSound);
-                links[i].addEventListener("hover", hoverSound);
-            }
-
-            function clickSound() {
-                audioclick.play();
-            }
+                links[i].addEventListener("mouseenter", hoverSound);
+            };
 
             function hoverSound() {
-                audiohover.play();
+                audiohover.currentTime = 0;
+                // Play only if audio is loaded and allowed by browser
+                audiohover.play().catch(function(e) {
+                    // Optionally log or handle play errors (e.g., user gesture required)
+                    console.log("Hover sound play failed:", e);
+                });
+            }
+            
+            function clickSound(event) {
+                event.preventDefault();
+                audioclick.currentTime = 0;
+                audioclick.play();
+                // Disable GameMenu links while sound is playing
+                links.forEach(link => link.style.pointerEvents = "none");
+                audioclick.onended = function() {
+                    links.forEach(link => link.style.pointerEvents = "auto");
+                    // Optionally, follow the link after sound ends
+                    if (event.target && event.target.href && event.target.getAttribute('href') !== "#") {
+                        window.location = event.target.href;
+                    }
+                };
+            }
+            // Play ambience audio in loop
+            audio.loop = true;
+            audio.volume = 1.0; // Adjust volume as needed
+
+            // Try to play ambience after user interaction (required by most browsers)
+            function tryPlayAmbience() {
+                audio.play().catch(function(e) {
+                    // Still failed, wait for next interaction
+                    console.log("Ambience audio play failed:", e);
+                });
+                // Remove listeners after first attempt
+                document.removeEventListener('keydown', tryPlayAmbience);
+                document.removeEventListener('click', tryPlayAmbience);
             }
 
-            function soundplay(){
-                sound.loop = true; 
-                sound.play(); }
-    
-
-            clickSound();
-            hoverSound();
-            soundplay();
+            // Attempt to play immediately (may fail)
+            audio.play().catch(function(e) {
+                // Wait for user interaction if autoplay fails
+                document.addEventListener('keydown', tryPlayAmbience);
+                document.addEventListener('click', tryPlayAmbience);
+            });
             
-        </script>
+            links.forEach(link => {
+                link.setAttribute('tabindex', '0');
+            });
+
+            // Disable mouse navigation for menu links
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                });
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                const focusable = Array.from(links);
+                const current = document.activeElement;
+                let idx = focusable.indexOf(current);
+
+                if (e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)) {
+                    e.preventDefault();
+                    idx = (idx + 1) % focusable.length;
+                    focusable[idx].focus();
+                    hoverSound(); // Play hover sound on keyboard navigation
+                } else if (e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) {
+                    e.preventDefault();
+                    idx = (idx - 1 + focusable.length) % focusable.length;
+                    focusable[idx].focus();
+                    hoverSound(); // Play hover sound on keyboard navigation
+                } else if (e.key === 'Enter' && focusable.includes(current)) {
+                    current.click();
+                }
+            });
+
+            // Hide mouse cursor and disable mouse input
+            document.body.style.cursor = "none";
+            document.addEventListener('mousemove', function(e) {
+                e.preventDefault();
+                return false;
+            }, { passive: false });
+
+            document.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                return false;
+            }, { passive: false });
+
+            document.addEventListener('mouseup', function(e) {
+                e.preventDefault();
+                return false;
+            }, { passive: false });
+
+            // Optionally, prevent context menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            }, { passive: false });
+            // Set initial focus to first link
+            window.onload = function() {
+                links[0].focus();
+            };            
+        </script>       
     </body>
 </html>
