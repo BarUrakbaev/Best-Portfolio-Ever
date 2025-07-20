@@ -37,7 +37,7 @@
             <audio id = "Ambience">
                 <source src="Sounds/Ambience.mp3">
             </audio>
-
+            <!--GameMenu-->
             <!--GameMenu-->
             <div class="GameMenu">
                 <h1>BEST PORTFOLIO EVER</h1>
@@ -354,6 +354,13 @@
             // Initial render
             renderMenu("main");
 
+            // Ensure Art Gallery click handler is attached after Explore menu is rendered
+            document.addEventListener('click', function() {
+                if (currentMenu === "Explore") {
+                    interceptGalleryMenu();
+                }
+            });
+
             // Keyboard navigation for submenu
             document.addEventListener('keydown', function(e) {
                 const focusable = submenuLinks;
@@ -402,5 +409,110 @@
 ">
     This Site is Under Construction
 </div>
-    </body>
+    <!-- Art Gallery Modal (hidden by default) -->
+    <div id="artGalleryModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.97); z-index:10000; align-items:center; justify-content:center; flex-direction:column;">
+        <button id="closeGalleryBtn" style="position:absolute; top:2vw; right:3vw; font-size:2vw; background:none; border:none; color:#FFD700; cursor:pointer;">&times; Close</button>
+        <div id="galleryContent" style="display:flex; flex-direction:column; align-items:center;">
+            <img id="galleryImage" src="" alt="Art" style="max-width:80vw; max-height:70vh; border:6px solid #FFD700; border-radius:12px; box-shadow:0 0 30px #FFD700;">
+            <div style="margin-top:1em;">
+                <button id="prevImage" style="font-size:1.2vw; margin-right:2vw; background:#222; color:#FFD700; border:none; border-radius:6px; padding:0.5em 1.5em; cursor:pointer;">&#8592; Prev</button>
+                <button id="nextImage" style="font-size:1.2vw; background:#222; color:#FFD700; border:none; border-radius:6px; padding:0.5em 1.5em; cursor:pointer;">Next &#8594;</button>
+            </div>
+            <div id="galleryCaption" style="color:#FFD700; margin-top:1em; font-size:1vw; text-align:center;"></div>
+        </div>
+    </div>
+    <script>
+        // --- Add Art Gallery external link logic to Explore submenu ---
+        // Find the "Art Gallery" item in Explore and set its href to ArtGallery.html (now handled by modal)
+        const exploreItems = menuData.Explore.items;
+        for (let item of exploreItems) {
+            if (item.label === "Art Gallery") {
+                item.href = "#";
+                item.isGallery = true; // Custom flag for gallery
+            }
+        }
+
+        // Art Gallery Data (replace with your own images and captions)
+        const artGalleryImages = [
+            { src: "./ArtGallery/BestProtfolioEver_WebsiteMainMenu_RoughSketchOfThe3D_Scene_1ST_Layer.jpg", caption: "Rough Sketch of the 3D Scene - 1st Layer" },
+            { src: "./ArtGallery/BestProtfolioEver_WebsiteMainMenu_RoughSketchOfThe3D_Scene_2Snd_Layer.jpg", caption: "Rough Sketch of the 3D Scene - 2nd Layer" },
+            { src: "./ArtGallery/art1.jpg", caption: "Digital Landscape #1" },
+            { src: "./ArtGallery/art2.jpg", caption: "Retro Pixel Portrait" },
+            { src: "./ArtGallery/art3.jpg", caption: "3D Render: Neon City" },
+            { src: "./ArtGallery/art4.jpg", caption: "Concept Sketch: Spaceship" }
+        ];
+
+        // Gallery modal logic
+        let currentArtIndex = 0;
+        const modal = document.getElementById('artGalleryModal');
+        const galleryImg = document.getElementById('galleryImage');
+        const galleryCaption = document.getElementById('galleryCaption');
+        const closeBtn = document.getElementById('closeGalleryBtn');
+        const prevBtn = document.getElementById('prevImage');
+        const nextBtn = document.getElementById('nextImage');
+
+        function showGallery(index = 0) {
+            if (!artGalleryImages.length) return;
+            currentArtIndex = index;
+            updateGallery();
+            modal.style.display = "flex";
+            setTimeout(() => closeBtn.focus(), 100);
+            document.body.style.overflow = "hidden";
+        }
+
+        function updateGallery() {
+            const img = artGalleryImages[currentArtIndex];
+            galleryImg.src = img.src;
+            galleryImg.alt = img.caption;
+            galleryCaption.textContent = img.caption;
+        }
+
+        function hideGallery() {
+            modal.style.display = "none";
+            document.body.style.overflow = "";
+        }
+
+        prevBtn.onclick = function() {
+            currentArtIndex = (currentArtIndex - 1 + artGalleryImages.length) % artGalleryImages.length;
+            updateGallery();
+        };
+        nextBtn.onclick = function() {
+            currentArtIndex = (currentArtIndex + 1) % artGalleryImages.length;
+            updateGallery();
+        };
+        closeBtn.onclick = hideGallery;
+
+        // Keyboard navigation for modal
+        modal.addEventListener('keydown', function(e) {
+            if (e.key === "Escape") hideGallery();
+            if (e.key === "ArrowLeft") prevBtn.click();
+            if (e.key === "ArrowRight") nextBtn.click();
+        });
+
+        // Intercept Art Gallery menu click
+        function interceptGalleryMenu() {
+            submenuLinks.forEach(link => {
+                if (link.textContent.trim() === "Art Gallery") {
+                    link.removeEventListener("click", menuClickHandler);
+                    link.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        audioclick.currentTime = 0;
+                        audioclick.play();
+                        showGallery();
+                    });
+                }
+            });
+        }
+
+        // Patch renderMenu to call interceptGalleryMenu after rendering Explore
+        const origRenderMenu = renderMenu;
+        renderMenu = function(menuKey) {
+            origRenderMenu(menuKey);
+            if (menuKey === "Explore") interceptGalleryMenu();
+        };
+
+        // If Explore is already rendered, patch links
+        if (currentMenu === "Explore") interceptGalleryMenu();
+    </script>
+</body>
 </html>
