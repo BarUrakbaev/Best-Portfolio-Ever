@@ -47,7 +47,7 @@
                     <li><a href="#">Explore</a></li>
                     <li><a href="#">Contact</a></li>
                     <li><a href="#">About</a></li>
-                    <li><a href="#">Hire</a></li>
+                    <li><a href="#">Hire Me</a></li>
                 </ul>
             </div>
         </div>
@@ -132,18 +132,93 @@
             //Elements
             const video = document.getElementById('VideoBackround');
             const audio = document.getElementById('Ambience')
-            const links = document.querySelectorAll("ul a");
             const audioclick = document.getElementById("ButtonGunShot");
             const audiohover = document.getElementById("ButtonHover");
-        
+
+            // Menu container
+            const gameMenu = document.querySelector('.GameMenu');
+            let currentMenu = "main";
+            let submenuLinks = [];
+
+            /* --- Submenu Data --- */
+            const menuData = {
+                Play: {
+                    title: "PLAY MENU",
+                    subtitle: "Choose your adventure",
+                    items: [
+                        { label: "Load a Game", href: "#" },
+                        { label: "Load a Game Source Code", href: "#" },
+                        { label: "Games List", href: "#" },
+                        { label: "Games Background", href: "#" },
+                        { label: "Back", href: "main" }
+                    ]
+                },
+                Explore: {
+                    title: "EXPLORE MENU",
+                    subtitle: "Discover more",
+                    items: [
+                        { label: "Game Development", href: "#" },
+                        { label: "3D Modeling", href: "#" },
+                        { label: "Art Gallery", href: "#" },
+                        { label: "Graphics Development", href: "#" },
+                        { label: "Sound Design", href: "#" },
+                        { label: "Animations", href: "#" },
+                        { label: "Web Development", href: "#" },
+                        { label: "Community Projects", href: "Community" },
+                        { label: "Music By Me", href: "#" },
+                        { label: "Back", href: "main" }
+                    ]
+                },
+                Community: {
+                    title: "COMMUNITY PROJECTS",
+                    subtitle: "Collaborative works",
+                    items: [
+                        { label: "The Re:Stellar Project", href: "ReStellar.html" },
+                        { label: "Back", href: "Explore" }
+                    ]
+                },
+                Contact: {
+                    title: "CONTACT MENU",
+                    subtitle: "Let's connect",
+                    items: [
+                        { label: "Email", href: "#" },
+                        { label: "LinkedIn", href: "#" },
+                        { label: "Back", href: "main" }
+                    ]
+                },
+                About: {
+                    title: "ABOUT MENU",
+                    subtitle: "Who am I?",
+                    items: [
+                        { label: "Bio", href: "#" },
+                        { label: "Skills", href: "#" },
+                        { label: "Hire History", href: "#" },
+                        { label: "List Of Projects", href: "#" },
+                        { label: "Back", href: "main" }
+                    ]
+                },
+                Hire: {
+                    title: "HIRE ME",
+                    subtitle: "Choose my role",
+                    items: [
+                        { label: "Freelance", href: "#" },
+                        { label: "Full-time", href: "#" },
+                        { label: "Part Time", href: "#" },
+                        { label: "Volunteer", href: "#" },
+                        { label: "Collaboration", href: "#" },
+                        { label: "Back", href: "main" }
+                    ]
+                }
+            };
+
             function hoverSound() {
                 audiohover.currentTime = 0;
-                // Play only if audio is loaded and allowed by browser
                 audiohover.play().catch(function(e) {
                     // Optionally log or handle play errors (e.g., user gesture required)
-                    console.log("Hover sound play failed:", e);
+                    // console.log("Hover sound play failed:", e);
                 });
             }
+
             // Play ambience audio in loop
             audio.loop = true;
             audio.volume = 1.0; // Adjust volume as needed
@@ -152,16 +227,13 @@
             function tryPlayAmbience() {
                 audio.play().catch(function(e) {
                     // Still failed, wait for next interaction
-                    console.log("Ambience audio play failed:", e);
                 });
-                // Remove listeners after first attempt
                 document.removeEventListener('keydown', tryPlayAmbience);
                 document.removeEventListener('click', tryPlayAmbience);
             }
 
             // Attempt to play immediately (may fail)
             audio.play().catch(function(e) {
-                // Wait for user interaction if autoplay fails
                 document.addEventListener('keydown', tryPlayAmbience);
                 document.addEventListener('click', tryPlayAmbience);
             });
@@ -183,92 +255,35 @@
                 return false;
             }, { passive: false });
 
-            // Optionally, prevent context menu
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
                 return false;
             }, { passive: false });
-            // Set initial focus to first link
-            window.onload = function() {
-                links[0].focus();
-            };
-            /* --- Submenu Data --- */
-            const menuData = {
-                Play: {
-                    title: "PLAY MENU",
-                    subtitle: "Choose your adventure",
-                    items: [
-                        { label: "Start Game", href: "#" },
-                        { label: "Load Game", href: "#" },
-                        { label: "High Scores", href: "#" },
-                        { label: "Back", href: "main" }
-                    ]
-                },
-                Explore: {
-                    title: "EXPLORE MENU",
-                    subtitle: "Discover more",
-                    items: [
-                        { label: "Projects", href: "#" },
-                        { label: "Gallery", href: "#" },
-                        { label: "Back", href: "main" }
-                    ]
-                },
-                Contact: {
-                    title: "CONTACT MENU",
-                    subtitle: "Let's connect",
-                    items: [
-                        { label: "Email", href: "#" },
-                        { label: "LinkedIn", href: "#" },
-                        { label: "Back", href: "main" }
-                    ]
-                },
-                About: {
-                    title: "ABOUT MENU",
-                    subtitle: "Who am I?",
-                    items: [
-                        { label: "Bio", href: "#" },
-                        { label: "Skills", href: "#" },
-                        { label: "Back", href: "main" }
-                    ]
-                },
-                Hire: {
-                    title: "HIRE MENU",
-                    subtitle: "Work with me",
-                    items: [
-                        { label: "Freelance", href: "#" },
-                        { label: "Full-time", href: "#" },
-                        { label: "Back", href: "main" }
-                    ]
-                }
-            };
-
-            /* --- Menu Switch Logic --- */
-            const gameMenu = document.querySelector('.GameMenu');
-            let currentMenu = "main";
-            let submenuLinks = [];
 
             function renderMenu(menuKey) {
                 let html = "";
-            if (menuKey === "main") {
-                html = `
-                    <h1>BEST PORTFOLIO EVER</h1>
-                    <h3>By BarUrakbaev </h3>
-                    <ul>
-                        <li><a href="#" data-menu="Play">Play</a></li>
-                        <li><a href="#" data-menu="Explore">Explore</a></li>
-                        <li><a href="#" data-menu="Contact">Contact</a></li>
-                        <li><a href="#" data-menu="About">About</a></li>
-                        <li><a href="#" data-menu="Hire">Hire</a></li>
-                    </ul>
-                `;
-            } else {
+                if (menuKey === "main") {
+                    html = `
+                        <h1>BEST PORTFOLIO EVER</h1>
+                        <h3>By BarUrakbaev </h3>
+                        <ul>
+                            <li><a href="#" data-menu="Play">Play</a></li>
+                            <li><a href="#" data-menu="Explore">Explore</a></li>
+                            <li><a href="#" data-menu="Contact">Contact</a></li>
+                            <li><a href="#" data-menu="About">About</a></li>
+                            <li><a href="#" data-menu="Hire">Hire Me</a></li>
+                        </ul>
+                    `;
+                } else {
                     const data = menuData[menuKey];
                     html = `
                         <h1>${data.title}</h1>
                         <h3>${data.subtitle}</h3>
                         <ul>
                             ${data.items.map(item =>
-                                `<li><a href="#" data-menu="${item.href === "main" ? "main" : ""}">${item.label}</a></li>`
+                                item.href && !menuData[item.href] && item.href !== "main" && item.href !== "Explore"
+                                    ? `<li><a href="${item.href}" data-external="true">${item.label}</a></li>`
+                                    : `<li><a href="#" data-menu="${item.href}">${item.label}</a></li>`
                             ).join("")}
                         </ul>
                     `;
@@ -287,12 +302,19 @@
                     li.style.margin = '0.7em 0';
                 });
 
-                // Set up new links
-                submenuLinks = Array.from(gameMenu.querySelectorAll('ul a'));
+                submenuLinks = Array.from(gameMenu.querySelectorAll('ul li a'));
                 submenuLinks.forEach(link => {
                     link.setAttribute('tabindex', '0');
                     link.addEventListener("mouseenter", hoverSound);
-                    link.addEventListener("click", menuClickHandler);
+                    if (!link.hasAttribute('data-external')) {
+                        link.addEventListener("click", menuClickHandler);
+                    } else {
+                        link.addEventListener("click", function(e) {
+                            audioclick.currentTime = 0;
+                            audioclick.play();
+                            window.location.href = link.getAttribute('href');
+                        });
+                    }
                 });
                 // Set initial focus
                 setTimeout(() => submenuLinks[0]?.focus(), 0);
@@ -303,14 +325,28 @@
                 audioclick.currentTime = 0;
                 audioclick.play();
                 const menuAttr = e.target.getAttribute('data-menu');
-                // If on main menu and a submenu button is pressed, show submenu
-                if (currentMenu === "main" && menuAttr && menuData[menuAttr]) {
-                    currentMenu = menuAttr;
+                // If in submenu and "Back" is pressed, go back to main
+                if (currentMenu !== "main" && menuAttr === "main") {
+                    currentMenu = "main";
                     renderMenu(currentMenu);
                 }
-                // If in submenu and "Back" is pressed, go back to main
-                else if (currentMenu !== "main" && menuAttr === "main") {
-                    currentMenu = "main";
+                // If in Community submenu and "Back" is pressed, go back to Explore
+                else if (currentMenu === "Community" && menuAttr === "Explore") {
+                    currentMenu = "Explore";
+                    renderMenu(currentMenu);
+                }
+                // If in Explore submenu and "Community" is pressed, go to Community
+                else if (currentMenu === "Explore" && menuAttr === "Community") {
+                    currentMenu = "Community";
+                    renderMenu(currentMenu);
+                }
+                // Allow keyboard navigation to open external links
+                else if (e.target.hasAttribute('data-external')) {
+                    window.location.href = e.target.getAttribute('href');
+                }
+                // If the menuAttr matches a submenu, render that submenu
+                else if (menuAttr && menuData[menuAttr]) {
+                    currentMenu = menuAttr;
                     renderMenu(currentMenu);
                 }
             }
@@ -340,6 +376,12 @@
                     current.click();
                 }
             });
+
+            // Set initial focus to first link
+            window.onload = function() {
+                const links = document.querySelectorAll(".GameMenu ul a");
+                if (links.length > 0) links[0].focus();
+            };
         </script>
     </body>
 </html>
